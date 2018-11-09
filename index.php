@@ -1,93 +1,338 @@
-<!doctype html>
-<html lang="pt-br">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<?php   include 'cabecalho.php';
+        include 'crud.php'         ?>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<?php
 
-    <title>Upload de arquivo com PHP</title>
-  </head>
-  <body>
-    <div class='container col-6 offset-3'>
-		<div class='row'>
-			<fieldset>
-				<!-- https://www.w3schools.com/tags/att_form_enctype.asp -->
-				<form action='#'	 method='post' enctype='multipart/form-data'>
-					<legend>Formulário de Upload</legend>
-					<div class='form-group'>
-						<label class='src-only' for='id_fileUpload'>Arquivo</label>
-						<input type='file' class='form-control' name='fileUpload' id='id_fileUpload'>
-					</div>
-					<div>
-						<button type='submit' class='btn btn-warning'>Upload</button>
-					</div>
-				</form>
-			</fieldset>
-		</div>
-		<div class='row' style='margin-top: 3%'>
-			<figure>
-				<img class="img-thumbnail" id='previewImg' alt="200x200" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22200%22%20height%3D%22200%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1668cd44530%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A10pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1668cd44530%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2274.4296875%22%20y%3D%22104.5%22%3E200x200%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true" style="width: 200px; height: 200px;">
-			</figure>
-		</div>
-	</div>
-	
-	<?php
-		if($_SERVER['REQUEST_METHOD'] === 'POST') {
-			
-			#$nome = $_POST | $_GET
-			$file = $_FILES['fileUpload']; // resgata um array
-			
-			if($file['error']) {
-				//throw new Exception('Error: ' . $file['error']);
-				echo 'Erro ao carregar o arquivo';
-				exit;
-			}
-			
-			$dirUploads = 'uploads';
-			
-			if(!is_dir($dirUploads)) {
-				mkdir($dirUploads);
-			}
-			
-			// http://php.net/manual/pt_BR/function.move-uploaded-file.php
-			#move_uploaded_file(filename, destination) // essa função retorna um booleano
-			if(move_uploaded_file($file['tmp_name'], $dirUploads . DIRECTORY_SEPARATOR . $file['name'])) {
-				echo 'Arquivo enviado com sucesso.';
-			} else {
-				//throw new Exception('Falha ao efetuar o upload.');
-				echo 'Erro ao efetuar o upload';
-				exit;
-			}
-		}
-	?>
-			
+$produtos = produto_index();
+$len = count($produtos);
+$indices = range(0,($len)-1);
+shuffle($indices);
+$i = 0;
+?>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-	<script>
-		function readURL(input) {
+        <!--comeco do carrosel-->
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                        </ol>
 
-		  if (input.files && input.files[0]) {
-			var reader = new FileReader();
 
-			reader.onload = function(e) {
-			  $('#previewImg').attr('src', e.target.result);
-			}
+                        <!--imgem do carosel-->
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="d-block w-100" src="img/banner_1_1.jpg" alt="First slide">
 
-			reader.readAsDataURL(input.files[0]);
-		  }
-		}
+                            </div>
+                            <!--imgem do carosel-->
+                            <div class="carousel-item">
+                                <img class="d-block w-100" src="img/Banner_2.jpg" alt="Second slide">
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100" src="img/banner_3.jpg" alt="Third slide">
+                            </div>
+                        </div>
 
-		$("#id_fileUpload").change(function() {
-		  readURL(this);
-		});
-	</script>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
 
-  </body>
-</html>
+            </div>
+        </div>
+
+
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card">
+                        <div class="card-header bg-primary text-uppercase">
+                            <i class="fa fa-star"></i> PRODUTOS EM OFERTAS
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container mt-3 mb-4">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="card">
+                        <div class="card-header bg-primary  text-uppercase">
+                            <i class="fa fa-trophy"></i> Melhores produtos
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                            <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm">
+                                    <div class="card">
+                                        <?php $prod = $produtos[$indices[$i++]];
+                                            $src = "uploads".DIRECTORY_SEPARATOR."thumbnail".DIRECTORY_SEPARATOR.$prod['img'];
+                                        ?>
+                                        <img class="card-img-top" src='<?= $src ?>' alt="Card image cap">
+                                        <div class="card-body">
+                                            <h4 class="card-title"><a href="buscaidprod.php?id=<?=$prod['id'] ?>" title="View Product"><?= substr($prod['nome'], 0, 17);?></a></h4>
+                                            <p class="card-text"><?= mb_strimwidth($prod['descr'], 0, 43, " ...");?></p>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p class="btn btn-light btn-block"><?= "R$ ".number_format($prod['preco'], 2, ',', '.')?></p>
+                                                </div>
+                                                <div class="col">
+                                                  <a href="carrinho.php?acao=add&id=<?=$prod['id']?>" class="btn btn-warning btn-block">Adicionar ao carrinho</a>
+                                                </div>
+                                                <?php
+                                                if(isset($_SESSION['user'])){
+                                                    if($_SESSION['user']['permissao'] == "admin"){
+                                                ?>
+                                                        <div class="col">
+                                                            <a href='<?="atualizar_prod.php?prodid=".$prod['id']?>' class="btn mt-1 btn-info btn-info btn-block text-light">Editar</a>
+                                                        </div>
+                                                <?php
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+<?php include 'rodape.php';
