@@ -1,4 +1,4 @@
-<?php   include 'cabecalho.php';
+<?php   include_once 'cabecalho.php';
         include 'crud.php'         ?>
 
 <?php
